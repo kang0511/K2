@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesanan Makanan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Menu Pesanan</h1>
+
+    <!-- Form untuk Pemesanan -->
+    <form id="form-pesanan">
+        <label for="namaPemesan">Nama Pemesan:</label>
+        <input type="text" id="namaPemesan" required><br><br>
+
+        <h3>Pilih Menu:</h3>
+        <div>
+            <input type="radio" name="item" id="item1" value="Mie Suit - Rp10,500">
+            <label for="item1">Mie Suit - Rp10,500</label><br>
+            <input type="radio" name="item" id="item2" value="Mie Hompimpa (Level 1-4) - Rp10,500">
+            <label for="item2">Mie Hompimpa (Level 1-4) - Rp10,500</label><br>
+            <input type="radio" name="item" id="item3" value="Mie Hompimpa (Level 6-8) - Rp11,400">
+            <label for="item3">Mie Hompimpa (Level 6-8) - Rp11,400</label><br>
+            <input type="radio" name="item" id="item4" value="Siomay - Rp9,500">
+            <label for="item4">Siomay - Rp9,500</label><br>
+            <input type="radio" name="item" id="item5" value="Es Gobak Sodor - Rp9,500">
+            <label for="item5">Es Gobak Sodor - Rp9,500</label><br>
+            <input type="radio" name="item" id="item6" value="Air Mineral - Rp4,500">
+            <label for="item6">Air Mineral - Rp4,500</label><br>
+            <!-- Add more items as needed -->
+        </div><br>
+
+        <label for="jumlahItem">Jumlah:</label>
+        <input type="number" id="jumlahItem" min="1" required><br><br>
+
+        <button type="submit">Tambah Pesanan</button>
+    </form>
+
+    <h3>Pesanan yang Dikirim:</h3>
+    <div id="pesananList"></div>
+
+    <script>
+        let pesananList = [];  // Array untuk menyimpan pesanan
+
+        // Menangani pengiriman form
+        document.getElementById("form-pesanan").addEventListener("submit", function(event) {
+            event.preventDefault();  // Mencegah refresh halaman saat form dikirim
+
+            const namaPemesan = document.getElementById("namaPemesan").value;
+            const jumlahItem = parseInt(document.getElementById("jumlahItem").value);
+            const item = document.querySelector('input[name="item"]:checked');
+
+            if (item) {
+                const itemName = item.value.split(" - ")[0];
+                const itemPrice = parseInt(item.value.split(" - ")[1].replace("Rp", "").replace(",", ""));
+                const totalHarga = itemPrice * jumlahItem;
+
+                // Menambahkan pesanan ke array
+                pesananList.push({
+                    namaPemesan: namaPemesan,
+                    itemName: itemName,
+                    jumlahItem: jumlahItem,
+                    totalHarga: totalHarga
+                });
+
+                // Menampilkan pesanan terbaru
+                tampilkanPesanan();
+            } else {
+                alert("Pilih item terlebih dahulu.");
+            }
+
+            // Reset form
+            document.getElementById("form-pesanan").reset();
+        });
+
+        // Fungsi untuk menampilkan pesanan
+        function tampilkanPesanan() {
+            const pesananDiv = document.getElementById("pesananList");
+            pesananDiv.innerHTML = '';  // Reset tampilan pesanan
+
+            pesananList.forEach((pesanan, index) => {
+                pesananDiv.innerHTML += `
+                    <div>
+                        <strong>Pesanan ${index + 1}:</strong>
+                        <p>Nama Pemesan: ${pesanan.namaPemesan}</p>
+                        <p>Item: ${pesanan.itemName}</p>
+                        <p>Jumlah: ${pesanan.jumlahItem}</p>
+                        <p>Total Harga: Rp${pesanan.totalHarga.toLocaleString()}</p>
+                    </div>
+                    <hr>
+                `;
+            });
+        }
+    </script>
+
+</body>
+</html>
